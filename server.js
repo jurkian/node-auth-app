@@ -64,6 +64,39 @@ apiRoutes.post('/authenticate', (req, res) => {
    }
 });
 
+// Route middleware to verify a token
+apiRoutes.use((req, res, next) => {
+
+   // Check header, url parameters or post parameters for token
+   let token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+   // Decode token
+   if (token) {
+
+      // Verify secret
+      jwt.verify(token, app.get('superSecret'), (err, decoded) => {
+         if (err) {
+            return res.json({
+               success: false,
+               message: 'Failed to authenticate token.'
+            });
+
+         } else {
+            // If everything is fine, save to request for later use in other routes
+            req.decoded = decoded;
+            next();
+         }
+      });
+
+   } else {
+      // If there is no token, return error
+      return res.status(403).send({
+         success: false,
+         message: 'No token provided.'
+      });
+   }
+});
+
 // Route: random message
 apiRoutes.get('/', (req, res) => {
    res.json({ message: 'Welcome to the coolest API on earth!' });
