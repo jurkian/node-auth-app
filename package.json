@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/jurkian/node-auth-app/issues"
   },
-  "homepage": "https://github.com/jurkian/node-auth-app#readme"
+  "homepage": "https://github.com/jurkian/node-auth-app#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^7.4.3",
+    "morgan": "^1.8.2"
+  }
 }
