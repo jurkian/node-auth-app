@@ -28,6 +28,42 @@ app.get('/', (req, res) => {
 // API routes
 let apiRoutes = express.Router();
 
+// Route: authenticate a user
+apiRoutes.post('/authenticate', (req, res) => {
+   
+   if (Users.name !== req.body.name) {
+      res.json({
+         success: false,
+         message: 'Authentication failed. User not found.'
+      });
+
+   } else {
+      
+      // Check if password matches
+      if (Users.password !== req.body.password) {
+         res.json({
+            success: false,
+            message: 'Authentication failed. Wrong password.'
+         });
+
+      } else {
+
+         // User is found and password is right
+         // Create a token
+         let token = jwt.sign(Users, app.get('superSecret'), {
+            expiresIn: '1 day'
+         });
+
+         // Return informations, including token as JSON
+         res.json({
+            success: true,
+            message: 'Here is your token!',
+            token
+         })
+      }
+   }
+});
+
 // Route: random message
 apiRoutes.get('/', (req, res) => {
    res.json({ message: 'Welcome to the coolest API on earth!' });
